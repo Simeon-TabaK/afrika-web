@@ -3,12 +3,9 @@ import type { SupportedCurrency } from '../types';
 import { 
   Plus, 
   MapPin, 
-  Users, 
   Eye, 
   MessageSquare, 
-  Heart,
-  ChevronRight,
-  TrendingUp
+  Heart
 } from 'lucide-react';
 
 interface ProjectsViewProps {
