@@ -1,35 +1,46 @@
-# Étape 1 : Build de l'application Vite
+# =====================================================================
+# ÉTAPE 1 : Build de l'application Vite (Node.js)
+# =====================================================================
 FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copie des fichiers de dépendances
+# Copie des manifestes de dépendances
 COPY package*.json ./
+RUN npm ci --frozen-lockfile
 
-RUN npm ci
-
-# Variables d'environnement pour le build Vite (si fournies en build-arg)
+# ===========================================================================
+# IMPORTANT COOLIFY : Variables de build Vite (injectées au moment du build)
+# Dans Coolify > Environment Variables, cochez "Build Variable" pour ces clés.
+# ===========================================================================
 ARG VITE_API_URL
 ARG VITE_BACKEND_URL
-ARG VITE_APP_NAME
-ENV VITE_API_URL=$VITE_API_URL
-ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
-ENV VITE_APP_NAME=$VITE_APP_NAME
+ARG VITE_APP_NAME=Afri'Ka
+ENV VITE_API_URL=$VITE_API_URL \
+    VITE_BACKEND_URL=$VITE_BACKEND_URL \
+    VITE_APP_NAME=$VITE_APP_NAME
 
-# Copie du code source
+# Copie du code source et build de production
 COPY . .
-
-# Compilation de l'application
 RUN npm run build
 
-# Étape 2 : Serveur Nginx de production
-FROM nginx:alpine
+# =====================================================================
+# ÉTAPE 2 : Serveur Nginx de production (image légère Alpine)
+# =====================================================================
+FROM nginx:1.27-alpine
 
-# Copie de la configuration Nginx optimisée pour SPA React
+# Suppression de la config Nginx par défaut
+RUN rm -f /etc/nginx/conf.d/default.conf
+
+# Config Nginx SPA optimisée
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copie des fichiers compilés depuis l'étape de build
+# Fichiers statiques compilés par Vite
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Health check pour Coolify / Docker Swarm
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost/healthz || exit 1
 
 EXPOSE 80
 

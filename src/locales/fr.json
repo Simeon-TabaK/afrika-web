@@ -81,5 +81,9 @@
   "privacy": "Confidentialité",
   "privacy_title": "Confidentialité & Sécurité des Données",
   "privacy_desc": "Vos informations sont chiffrées de bout en bout et protégées selon les normes de sécurité africaines et internationales.",
-  "menu": "Menu"
+  "menu": "Menu",
+  "back": "Retour",
+  "change_language": "Changer de langue",
+  "select_language": "Sélectionner la langue",
+  "language_saved": "Langue enregistrée avec succès"
 }

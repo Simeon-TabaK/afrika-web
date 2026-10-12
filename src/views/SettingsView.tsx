@@ -11,7 +11,8 @@ import {
   Moon, 
   Clock, 
   ShieldCheck, 
-  UserCog
+  UserCog,
+  ChevronRight
 } from 'lucide-react';
 
 interface SettingsViewProps {
@@ -19,6 +20,7 @@ interface SettingsViewProps {
   onRoleChange: (role: UserRole) => void;
   currency: SupportedCurrency;
   onCurrencyChange: (currency: SupportedCurrency) => void;
+  onNavigateToLanguage?: () => void;
 }
 
 export const SettingsView: React.FC<SettingsViewProps> = ({
@@ -26,8 +28,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   onRoleChange,
   currency,
   onCurrencyChange,
+  onNavigateToLanguage,
 }) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [gmtTime, setGmtTime] = useState<string>(getGMTCurrentTimeString());
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('afrika_theme') !== 'light';
@@ -118,6 +121,67 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             <span>Langue d'Affichage de la Plateforme</span>
           </h3>
         </div>
+
+        {/* Dedicated Navigation Tile matching Flutter AllSettingsScreen */}
+        {onNavigateToLanguage && (
+          <div
+            onClick={onNavigateToLanguage}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '16px 20px',
+              borderRadius: 'var(--radius-sm, 12px)',
+              background: 'var(--bg-surface-elevated, #242424)',
+              border: '1px solid var(--border-color, #333)',
+              marginBottom: '16px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-primary, #6DBE47)';
+              e.currentTarget.style.background = 'rgba(109, 190, 71, 0.08)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-color, #333)';
+              e.currentTarget.style.background = 'var(--bg-surface-elevated, #242424)';
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '10px',
+                  background: 'rgba(109, 190, 71, 0.15)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--color-primary, #6DBE47)',
+                }}
+              >
+                <Languages size={22} />
+              </div>
+              <div>
+                <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>
+                  {t('language')}
+                </div>
+                <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>Actuelle :</span>
+                  <span style={{ fontWeight: 600, color: '#6DBE47' }}>
+                    {i18n.language === 'sw' ? '🇹🇿 Kiswahili' : i18n.language === 'en' ? '🇺🇸 English' : '🇫🇷 Français'}
+                  </span>
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>• Ouvrir l'écran dédié</span>
+                </div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-primary, #6DBE47)' }}>
+              <span style={{ fontSize: '12px', fontWeight: 600 }}>Gérer</span>
+              <ChevronRight size={18} />
+            </div>
+          </div>
+        )}
+
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
           {[
             { code: 'fr', label: 'Français', flag: '🇫🇷' },

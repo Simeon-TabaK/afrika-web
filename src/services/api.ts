@@ -43,9 +43,27 @@ export const convertCurrency = (
   return Math.round(inTarget * 100) / 100;
 };
 
-export const formatCurrency = (amount: number, currency: SupportedCurrency): string => {
+export const getActiveLanguage = (): string => {
+  return typeof window !== 'undefined' ? localStorage.getItem('afrika_lang') || 'fr' : 'fr';
+};
+
+export const getApiHeaders = (token?: string | null): Record<string, string> => {
+  const lang = getActiveLanguage();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Accept-Language': lang,
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+};
+
+export const formatCurrency = (amount: number, currency: SupportedCurrency, locale?: string): string => {
+  const lang = getActiveLanguage();
+  const currentLocale = locale || (lang === 'en' ? 'en-US' : lang === 'sw' ? 'sw-TZ' : 'fr-FR');
   const symbol = CURRENCY_SYMBOLS[currency] || currency;
-  const formatted = new Intl.NumberFormat('fr-FR', {
+  const formatted = new Intl.NumberFormat(currentLocale, {
     maximumFractionDigits: ['CDF', 'XAF', 'XOF', 'RWF', 'NGN'].includes(currency) ? 0 : 2,
     minimumFractionDigits: ['CDF', 'XAF', 'XOF', 'RWF', 'NGN'].includes(currency) ? 0 : 2,
   }).format(amount);

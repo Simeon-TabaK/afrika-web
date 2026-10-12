@@ -35,6 +35,7 @@ import { StoriesAdminView } from './views/StoriesAdminView';
 import { OpsHealthView } from './views/OpsHealthView';
 import { HelpCenterView } from './views/HelpCenterView';
 import { SettingsView } from './views/SettingsView';
+import { LanguageView } from './views/LanguageView';
 import { AuthView } from './views/AuthView';
 import { AuthService } from './services/authService';
 
@@ -113,6 +114,7 @@ export function App() {
       case 'stories_admin': return t('stories');
       case 'ops': return t('ops');
       case 'settings': return t('settings_title');
+      case 'language': return t('language');
       case 'auth': return t('auth_title');
       case 'all_projects': return 'Tout les projets';
       case 'all_posts': return 'Publications & Nouveautés';
@@ -328,7 +330,11 @@ export function App() {
                   onRoleChange={handleRoleChange}
                   currency={currency}
                   onCurrencyChange={setCurrency}
+                  onNavigateToLanguage={() => setActiveItem('language')}
                 />
+              )}
+              {activeItem === 'language' && (
+                <LanguageView onBack={() => setActiveItem('settings')} />
               )}
               {activeItem === 'help' && <HelpCenterView />}
             </>

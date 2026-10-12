@@ -24,6 +24,7 @@ import {
   BadgeCheck,
   Search,
   SlidersHorizontal,
+  Globe,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -51,13 +52,21 @@ export const Header: React.FC<HeaderProps> = ({
   onSearchChange,
   onFilterClick,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isDark, setIsDark] = useState<boolean>(() => localStorage.getItem('afrika_theme') !== 'light');
+  const [showLangMenu, setShowLangMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showAdminMenu, setShowAdminMenu] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+
+  const supportedLanguages = [
+    { code: 'fr', name: 'Français', flag: '🇫🇷', short: 'FR' },
+    { code: 'en', name: 'English', flag: '🇬🇧', short: 'EN' },
+    { code: 'sw', name: 'Kiswahili', flag: '🇹🇿', short: 'SW' },
+  ];
+  const currentLang = supportedLanguages.find((l) => l.code === (i18n.language || 'fr')) || supportedLanguages[0];
 
   // Privacy states
   const [hideAmounts, setHideAmounts] = useState(false);
@@ -165,8 +174,90 @@ export const Header: React.FC<HeaderProps> = ({
           />
         </div>
 
-        {/* Right: Theme switch + Notification Bell + Hamburger Menu */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        {/* Right: Language selector + Theme switch + Notification Bell + Hamburger Menu */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* Language Selector Dropdown */}
+          <div style={{ position: 'relative' }}>
+            <button
+              onClick={() => setShowLangMenu(!showLangMenu)}
+              title={t('change_language')}
+              style={{
+                background: 'rgba(255, 255, 255, 0.18)',
+                border: '1px solid rgba(255, 255, 255, 0.35)',
+                color: '#FFFFFF',
+                borderRadius: '20px',
+                height: '40px',
+                padding: '0 12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                cursor: 'pointer',
+                fontWeight: 600,
+                fontSize: '13px',
+                transition: 'background 0.2s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.28)')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)')}
+            >
+              <Globe size={17} color="#FFFFFF" />
+              <span>{currentLang.flag} {currentLang.short}</span>
+            </button>
+
+            {showLangMenu && (
+              <>
+                <div
+                  style={{ position: 'fixed', inset: 0, zIndex: 99 }}
+                  onClick={() => setShowLangMenu(false)}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 8px)',
+                    right: 0,
+                    zIndex: 100,
+                    background: isDark ? '#1E1E1E' : '#FFFFFF',
+                    border: isDark ? '1px solid #333' : '1px solid #E2E8F0',
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 25px rgba(0,0,0,0.25)',
+                    padding: '6px',
+                    minWidth: '150px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
+                  }}
+                >
+                  {supportedLanguages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => {
+                        i18n.changeLanguage(lang.code);
+                        setShowLangMenu(false);
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        border: 'none',
+                        background: (i18n.language || 'fr') === lang.code ? (isDark ? 'rgba(107, 158, 65, 0.25)' : '#F0FDF4') : 'transparent',
+                        color: (i18n.language || 'fr') === lang.code ? '#6B9E41' : (isDark ? '#F1F5F9' : '#1E293B'),
+                        fontWeight: (i18n.language || 'fr') === lang.code ? 700 : 500,
+                        fontSize: '13px',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        width: '100%',
+                      }}
+                    >
+                      <span style={{ fontSize: '16px' }}>{lang.flag}</span>
+                      <span>{lang.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
           {/* Dark/Light mode toggle */}
           <button
             onClick={handleToggleTheme}

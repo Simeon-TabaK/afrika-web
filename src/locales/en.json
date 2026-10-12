@@ -81,5 +81,9 @@
   "privacy": "Privacy & Security",
   "privacy_title": "Data Privacy & Security",
   "privacy_desc": "Your data is encrypted end-to-end and protected following global and African security standards.",
-  "menu": "Menu"
+  "menu": "Menu",
+  "back": "Back",
+  "change_language": "Change language",
+  "select_language": "Select language",
+  "language_saved": "Language saved successfully"
 }

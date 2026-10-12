@@ -41,6 +41,7 @@ export type NavItemKey =
   | 'stories_admin'
   | 'ops'
   | 'settings'
+  | 'language'
   | 'auth'
   | 'all_projects'
   | 'all_posts'
@@ -72,16 +73,17 @@ export const Navigation = ({
   const canAccess = (item: NavItemKey): boolean => {
     // Client role
     if (currentRole === 'user') {
-      return ['home', 'discover', 'create', 'projects', 'messages', 'profile', 'donations', 'kyc_client', 'settings', 'auth', 'all_projects', 'all_posts', 'help'].includes(item);
+      return ['home', 'discover', 'create', 'projects', 'messages', 'profile', 'donations', 'kyc_client', 'settings', 'language', 'auth', 'all_projects', 'all_posts', 'help'].includes(item);
     }
     // Super Admin has access to all admin items (NO client items like home, discover, create, projects, messages)
     if (currentRole === 'super_admin') {
-      return ['overview', 'users_admin', 'certified_users_admin', 'communities_admin', 'forums_admin', 'projects_admin', 'donations', 'stories_admin', 'marketplace_admin', 'kyc_admin', 'ops', 'settings', 'help'].includes(item);
+      return ['overview', 'users_admin', 'certified_users_admin', 'communities_admin', 'forums_admin', 'projects_admin', 'donations', 'stories_admin', 'marketplace_admin', 'kyc_admin', 'ops', 'settings', 'language', 'help'].includes(item);
     }
     // Specialized Agents
     switch (item) {
       case 'overview':
       case 'settings':
+      case 'language':
       case 'auth':
       case 'help':
         return true;

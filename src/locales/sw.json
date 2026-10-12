@@ -81,5 +81,9 @@
   "privacy": "Faragha na Usalama",
   "privacy_title": "Faragha na Usalama wa Data",
   "privacy_desc": "Data yako imesimbwa kutoka mwanzo hadi mwisho na kulindwa kulingana na viwango vya usalama.",
-  "menu": "Menyu"
+  "menu": "Menyu",
+  "back": "Rudi",
+  "change_language": "Badilisha lugha",
+  "select_language": "Chagua lugha",
+  "language_saved": "Lugha imehifadhiwa kwa mafanikio"
 }
